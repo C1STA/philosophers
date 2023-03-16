@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 05:05:47 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/16 11:02:27 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/16 13:05:53 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ static void	print_status(t_philo *philo, char *str)
 	(get_time_in_ms() - philo->table->start_time), (philo->id + 1), str);
 }
 
-void	write_status(t_philo *philo, bool reaper_report, t_status status)
+void	write_status(t_philo *philo, bool report, t_status status)
 {
 	pthread_mutex_lock(&philo->table->write_lock);
-	if (simulation_status(philo->table) == true && reaper_report == false)
+	if (simulation_status(philo->table) == true && report == false)
 	{
 		pthread_mutex_unlock(&philo->table->write_lock);
 		return ;

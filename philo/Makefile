@@ -5,7 +5,7 @@ CFLAGS = -pthread -Wall -Wextra -Werror
 
 SRC = main.c \
 	exit.c \
-	grim_reaper.c \
+	supervisor.c \
 	init.c \
 	lib.c \
 	output.c \

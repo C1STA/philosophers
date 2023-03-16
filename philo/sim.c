@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 04:29:48 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/15 17:33:03 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/16 15:00:41 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool	start_simulation(t_params *table)
 		i++;
 	}
 	if (table->nb_philos > 1)
-		if (pthread_create(&table->grim_reaper, NULL, &grim_reaper, table))
+		if (pthread_create(&table->supervisor, NULL, &supervisor, table))
 			return (error_bool(THREAD_CREAT_ERR, table));
 	return (true);
 }
@@ -43,7 +43,7 @@ bool	stop_simulation(t_params *table)
 		i++;
 	}
 	if (table->nb_philos > 1)
-		if (pthread_join(table->grim_reaper, NULL))
+		if (pthread_join(table->supervisor, NULL))
 			return (error_bool(THREAD_JOIN_ERR, table));
 	if (!destroy_mutexes(table))
 		return (false);

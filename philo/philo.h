@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 13:52:20 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/16 11:10:08 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/16 15:00:34 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct s_params
 {
 	time_t			start_time;
 	int				nb_philos;
-	pthread_t		grim_reaper;
+	pthread_t		supervisor;
 	time_t			time_to_die;
 	time_t			time_to_eat;
 	time_t			time_to_sleep;
@@ -83,9 +83,9 @@ void	*free_prog(t_params *table);
 bool	error_bool(char *str, t_params *table);
 void	*error_null(char *str, t_params *table);
 
-//	grim_reaper.c
+//	supervisor.c
 bool	simulation_status(t_params *table);
-void	*grim_reaper(void *data);
+void	*supervisor(void *data);
 
 //	init.c
 bool	init_params(t_params *table, int ac, char *av[]);
@@ -97,7 +97,7 @@ int		ft_strlen(char *str);
 //output.c
 bool	msg(char *str, bool exit_nb);
 bool	msg_max_philos(char *str, int max, bool exit_nb);
-void	write_status(t_philo *philo, bool reaper_report, t_status status);
+void	write_status(t_philo *philo, bool report, t_status status);
 
 //philo.c
 void	*philosopher(void *data);

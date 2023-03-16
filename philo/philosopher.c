@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 04:39:30 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/16 11:36:32 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/16 12:54:10 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static void	routine(t_philo *philo)
 	if (!simulation_status(philo->table))
 	{
 		pthread_mutex_lock(&philo->meal_time_lock);
-		philo->times_ate += 1;
+		philo->times_ate++;
 		pthread_mutex_unlock(&philo->meal_time_lock);
 	}
 	write_status(philo, false, SLEEPING);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   grim_reaper.c                                      :+:      :+:    :+:   */
+/*   supervisor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 05:18:53 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/06 07:50:30 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/16 15:31:13 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static bool	kill_philo(t_philo *philo)
 	return (false);
 }
 
-static bool	end_condition_reached(t_params *table)
+static bool	check_philos_states(t_params *table)
 {
 	int		i;
 	bool	all_ate_enough;
@@ -59,8 +59,7 @@ static bool	end_condition_reached(t_params *table)
 		if (kill_philo(table->philos[i]))
 			return (true);
 		if (table->must_eat_count != -1)
-			if (table->philos[i]->times_ate \
-			< (unsigned int)table->must_eat_count)
+			if (table->philos[i]->times_ate < (unsigned int)table->must_eat_count)
 				all_ate_enough = false;
 		pthread_mutex_unlock(&table->philos[i]->meal_time_lock);
 		i++;
@@ -73,7 +72,7 @@ static bool	end_condition_reached(t_params *table)
 	return (false);
 }
 
-void	*grim_reaper(void *data)
+void	*supervisor(void *data)
 {
 	t_params	*table;
 
@@ -82,9 +81,9 @@ void	*grim_reaper(void *data)
 		return (NULL);
 	update_sim_stop(table, false);
 	sim_start_delay(table->start_time);
-	while (true)
+	while (1)
 	{
-		if (end_condition_reached(table) == true)
+		if (check_philos_states(table))
 			return (NULL);
 		usleep(1000);
 	}
