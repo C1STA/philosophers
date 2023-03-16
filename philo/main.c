@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/10 14:35:17 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/06 07:15:25 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/16 11:38:11 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	main(int ac, char *av[])
 	memset(table, 0, sizeof(t_params));
 	if (!init_params(table, ac, av))
 		return (EXIT_FAILURE);
-	if (!start_simulation(table))
+	if (!start_simulation(table))/* 		if (philo->times_ate == (unsigned int)philo->table->must_eat_count)
+			return (NULL); */
 		return (EXIT_FAILURE);
 	if (!stop_simulation(table))
 		return (EXIT_FAILURE);

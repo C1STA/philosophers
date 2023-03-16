@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 03:49:25 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/07 05:12:21 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/16 11:02:42 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static bool	check_params(int ac, char *av[], t_params *table)
 	if (table->nb_philos <= 0)
 		is_valid = msg(ARG_1_ERR, false);
 	if (table->nb_philos > MAX_PHILOS)
-		is_valid = msg(MAX_PHILOS_ERR, false);
+		is_valid = msg_max_philos(MAX_PHILOS_ERR, MAX_PHILOS, false);
 	if (table->time_to_die < 0)
 		is_valid = msg(ARG_2_ERR, false);
 	if (table->time_to_eat < 0)

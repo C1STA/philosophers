@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 13:52:20 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/06 07:41:19 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/16 11:10:08 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,10 @@
 # include <limits.h>
 # include <string.h>
 # include <stdbool.h>
-# include <sys/wait.h>
 # include <sys/time.h>
 # include <pthread.h>
 
-# define MAX_PHILOS 250
-
-# define NC	"\e[0m"
-# define RED	"\e[31m"
-# define GREEN	"\e[32m"
-# define PURPLE	"\e[35m";
-# define CYAN	"\e[36m";
+# define MAX_PHILOS 200
 
 # define ARGS_ERR "philo: wrong format: four or five arguments allowed\n"
 # define ARG_1_ERR "philo: wrong format: <number of philosophers>\n"
@@ -38,7 +31,7 @@
 # define ARG_4_ERR "philo: wrong format: <time_to_sleep>\n"
 # define ARG_5_ERR "philo: wrong format: \
 <number_of_times_each_philosopher_must_eat>\n"
-# define MAX_PHILOS_ERR "philo: <number of philosophers> > 250\n"
+# define MAX_PHILOS_ERR "philo: <number of philosophers> > "
 # define MALLOC_ERR "philo: malloc failed\n"
 # define MUTEX_INIT_ERR "philo: pthread_mutex_init failed\n"
 # define MUTEX_DEST_ERR "philo: pthread_mutex_destory failed\n"
@@ -103,6 +96,7 @@ int		ft_strlen(char *str);
 
 //output.c
 bool	msg(char *str, bool exit_nb);
+bool	msg_max_philos(char *str, int max, bool exit_nb);
 void	write_status(t_philo *philo, bool reaper_report, t_status status);
 
 //philo.c

@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 04:29:48 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/06 07:31:56 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/15 17:33:03 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,9 @@ bool	start_simulation(t_params *table)
 			return (error_bool(THREAD_CREAT_ERR, table));
 		i++;
 	}
-	if (pthread_create(&table->grim_reaper, NULL, &grim_reaper, table))
-		return (error_bool(THREAD_CREAT_ERR, table));
+	if (table->nb_philos > 1)
+		if (pthread_create(&table->grim_reaper, NULL, &grim_reaper, table))
+			return (error_bool(THREAD_CREAT_ERR, table));
 	return (true);
 }
 

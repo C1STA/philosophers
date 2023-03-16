@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 04:39:30 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/06 07:55:38 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/16 11:36:32 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ static void	*philo_is_alone(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->table->fork_locks[philo->fork[0]]);
 	write_status(philo, false, TOOK_FORK_1);
-	philo_sleeping(philo->table, philo->table->time_to_die);
-	write_status(philo, false, DIED);
+	usleep(philo->table->time_to_die * 1000);
 	pthread_mutex_unlock(&philo->table->fork_locks[philo->fork[0]]);
+	write_status(philo, false, DIED);
 	return (NULL);
 }
 
-static void	philo_thinking(t_philo *philo, bool silent)
+static bool	philo_thinking(t_philo *philo, bool silent)
 {
 	time_t	time_to_think;
 
@@ -39,7 +39,10 @@ static void	philo_thinking(t_philo *philo, bool silent)
 		time_to_think = 200;
 	if (silent == false)
 		write_status(philo, false, THINKING);
+	if (philo->times_ate == (unsigned int)philo->table->must_eat_count)
+		return (false);
 	philo_sleeping(philo->table, time_to_think);
+	return (true);
 }
 
 static void	routine(t_philo *philo)
@@ -85,7 +88,8 @@ void	*philosopher(void *data)
 	while (simulation_status(philo->table) == false)
 	{
 		routine(philo);
-		philo_thinking(philo, false);
+		if (!philo_thinking(philo, false))
+			return (NULL);
 	}
 	return (NULL);
 }

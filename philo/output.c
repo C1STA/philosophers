@@ -6,11 +6,35 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 05:05:47 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/06 07:55:10 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/16 11:02:27 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	ft_putnbr(int n)
+{
+	char	c;
+
+	if (n < 10)
+	{
+		c = n + '0';
+		write (1, &c, 1);
+	}
+	if (n >= 10)
+	{
+		ft_putnbr(n / 10);
+		ft_putnbr(n % 10);
+	}
+}
+
+bool	msg_max_philos(char *str, int max, bool exit_nb)
+{
+	write(2, str, ft_strlen(str));
+	ft_putnbr(max);
+	write(2, "\n", 1);
+	return (exit_nb);
+}
 
 bool	msg(char *str, bool exit_nb)
 {
