@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 04:28:25 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/16 11:37:04 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/21 13:23:51 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	sim_start_delay(time_t start_time)
 		continue ;
 }
 
-void	philo_sleeping(t_params *table, time_t sleep_time)
+void	latency(t_params *table, time_t sleep_time)
 {
 	time_t	wake_up;
 

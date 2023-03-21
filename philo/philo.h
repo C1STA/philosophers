@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 13:52:20 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/16 15:00:34 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/21 13:31:59 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 # include <pthread.h>
 
 # define MAX_PHILOS 200
-
 # define ARGS_ERR "philo: wrong format: four or five arguments allowed\n"
 # define ARG_1_ERR "philo: wrong format: <number of philosophers>\n"
 # define ARG_2_ERR "philo: wrong format: <time_to_die>\n"
@@ -42,17 +41,18 @@ typedef struct s_philo	t_philo;
 
 typedef struct s_params
 {
-	time_t			start_time;
 	int				nb_philos;
-	pthread_t		supervisor;
-	time_t			time_to_die;
-	time_t			time_to_eat;
-	time_t			time_to_sleep;
+	time_t			time_die;
+	time_t			time_eat;
+	time_t			time_sleep;
+	time_t			time_think;
+	time_t			start_time;
 	int				must_eat_count;
 	bool			sim_stop;
-	pthread_mutex_t	sim_stop_lock;
-	pthread_mutex_t	write_lock;
-	pthread_mutex_t	*fork_locks;
+	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	stop_mutex;
+	pthread_mutex_t	*fork_mutex;
+	pthread_t		supervisor;
 	t_philo			**philos;
 }	t_params;
 
@@ -62,19 +62,17 @@ typedef struct s_philo
 	unsigned int	id;
 	unsigned int	times_ate;
 	unsigned int	fork[2];
-	pthread_mutex_t	meal_time_lock;
+	pthread_mutex_t	meal_mutex;
 	time_t			last_meal;
 	t_params		*table;
 }	t_philo;
 
 typedef enum e_status
 {
-	DIED,
 	EATING,
 	SLEEPING,
 	THINKING,
-	TOOK_FORK_1,
-	TOOK_FORK_2,
+	TOOK_FORK,
 }	t_status;
 
 //	exit.c
@@ -97,7 +95,8 @@ int		ft_strlen(char *str);
 //output.c
 bool	msg(char *str, bool exit_nb);
 bool	msg_max_philos(char *str, int max, bool exit_nb);
-void	write_status(t_philo *philo, bool report, t_status status);
+void	print_status(t_philo *philo, char *str);
+void	display_status(t_philo *philo, t_status status);
 
 //philo.c
 void	*philosopher(void *data);
@@ -109,6 +108,6 @@ bool	stop_simulation(t_params *table);
 //time.c
 time_t	get_time_in_ms(void);
 void	sim_start_delay(time_t start_time);
-void	philo_sleeping(t_params *table, time_t sleep_time);
+void	latency(t_params *table, time_t sleep_time);
 
 #endif

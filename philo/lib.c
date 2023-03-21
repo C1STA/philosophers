@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 04:25:42 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/15 14:39:30 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/19 12:57:33 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	ft_atoi(char *str)
 
 	i = 0;
 	res = 0;
-	if (!str || ft_strlen(str) > 10)
+	if (!*str || !str || ft_strlen(str) > 10)
 		return (-1);
 	while (str[i])
 	{

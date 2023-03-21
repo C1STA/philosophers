@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 05:18:53 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/16 15:31:13 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/21 13:31:59 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 bool	simulation_status(t_params *table)
 {
-	bool	status;
-
-	status = false;
-	pthread_mutex_lock(&table->sim_stop_lock);
+	pthread_mutex_lock(&table->stop_mutex);
 	if (table->sim_stop == true)
-		status = true;
-	pthread_mutex_unlock(&table->sim_stop_lock);
-	return (status);
+	{
+		pthread_mutex_unlock(&table->stop_mutex);
+		return (true);
+	}
+	pthread_mutex_unlock(&table->stop_mutex);
+	return (false);
 }
 
 static void	update_sim_stop(t_params *table, bool state)
 {
-	pthread_mutex_lock(&table->sim_stop_lock);
+	pthread_mutex_lock(&table->stop_mutex);
 	table->sim_stop = state;
-	pthread_mutex_unlock(&table->sim_stop_lock);
+	pthread_mutex_unlock(&table->stop_mutex);
 }
 
 static bool	kill_philo(t_philo *philo)
@@ -36,11 +36,13 @@ static bool	kill_philo(t_philo *philo)
 	time_t	time;
 
 	time = get_time_in_ms();
-	if ((time - philo->last_meal) >= philo->table->time_to_die)
+	if ((time - philo->last_meal) >= philo->table->time_die)
 	{
 		update_sim_stop(philo->table, true);
-		write_status(philo, true, DIED);
-		pthread_mutex_unlock(&philo->meal_time_lock);
+		pthread_mutex_lock(&philo->table->print_mutex);
+		print_status(philo, "died");
+		pthread_mutex_unlock(&philo->table->print_mutex);
+		pthread_mutex_unlock(&philo->meal_mutex);
 		return (true);
 	}
 	return (false);
@@ -55,13 +57,14 @@ static bool	check_philos_states(t_params *table)
 	i = 0;
 	while (i < table->nb_philos)
 	{
-		pthread_mutex_lock(&table->philos[i]->meal_time_lock);
-		if (kill_philo(table->philos[i]))
+		pthread_mutex_lock(&table->philos[i]->meal_mutex);
+		if (kill_philo(table->philos[i]) == true)
 			return (true);
 		if (table->must_eat_count != -1)
-			if (table->philos[i]->times_ate < (unsigned int)table->must_eat_count)
+			if (table->philos[i]->times_ate \
+			< (unsigned int)table->must_eat_count)
 				all_ate_enough = false;
-		pthread_mutex_unlock(&table->philos[i]->meal_time_lock);
+		pthread_mutex_unlock(&table->philos[i]->meal_mutex);
 		i++;
 	}
 	if (table->must_eat_count != -1 && all_ate_enough == true)

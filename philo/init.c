@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 03:49:25 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/16 11:02:42 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/21 13:31:59 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,20 @@ static bool	init_forks_and_mutexes(t_params *table)
 {
 	int	i;
 
-	table->fork_locks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) \
+	table->fork_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) \
 	* table->nb_philos);
-	if (!table->fork_locks)
+	if (!table->fork_mutex)
 		return (error_bool(MALLOC_ERR, table));
 	i = 0;
 	while (i < table->nb_philos)
 	{
-		if (pthread_mutex_init(&table->fork_locks[i], 0))
+		if (pthread_mutex_init(&table->fork_mutex[i], 0))
 			return (error_bool(MUTEX_INIT_ERR, table));
 		i++;
 	}
-	if (pthread_mutex_init(&table->sim_stop_lock, 0))
+	if (pthread_mutex_init(&table->stop_mutex, 0))
 		return (error_bool(MUTEX_INIT_ERR, table));
-	if (pthread_mutex_init(&table->write_lock, 0))
+	if (pthread_mutex_init(&table->print_mutex, 0))
 		return (error_bool(MUTEX_INIT_ERR, table));
 	return (true);
 }
@@ -68,7 +68,7 @@ static t_philo	**init_philos(t_params *table)
 		if (!philos[i])
 			return (error_null(MALLOC_ERR, table));
 		memset(philos[i], 0, sizeof(t_philo));
-		if (pthread_mutex_init(&philos[i]->meal_time_lock, 0))
+		if (pthread_mutex_init(&philos[i]->meal_mutex, 0))
 			return (error_null(MUTEX_INIT_ERR, table));
 		philos[i]->table = table;
 		philos[i]->id = i;
@@ -88,11 +88,11 @@ static bool	check_params(int ac, char *av[], t_params *table)
 		is_valid = msg(ARG_1_ERR, false);
 	if (table->nb_philos > MAX_PHILOS)
 		is_valid = msg_max_philos(MAX_PHILOS_ERR, MAX_PHILOS, false);
-	if (table->time_to_die < 0)
+	if (table->time_die < 0)
 		is_valid = msg(ARG_2_ERR, false);
-	if (table->time_to_eat < 0)
+	if (table->time_eat < 0)
 		is_valid = msg(ARG_3_ERR, false);
-	if (table->time_to_sleep < 0)
+	if (table->time_sleep < 0)
 		is_valid = msg(ARG_4_ERR, false);
 	if (ac == 6)
 	{
@@ -110,9 +110,14 @@ static bool	check_params(int ac, char *av[], t_params *table)
 bool	init_params(t_params *table, int ac, char *av[])
 {
 	table->nb_philos = ft_atoi(av[1]);
-	table->time_to_die = ft_atoi(av[2]);
-	table->time_to_eat = ft_atoi(av[3]);
-	table->time_to_sleep = ft_atoi(av[4]);
+	table->time_die = ft_atoi(av[2]);
+	table->time_eat = ft_atoi(av[3]);
+	table->time_sleep = ft_atoi(av[4]);
+	table->sim_stop = false;
+	table->time_think = \
+	((table->time_die - (table->time_eat + table->time_sleep)) / 2);
+	if (table->time_think < 0)
+		table->time_think = 0;
 	if (!check_params(ac, av, table))
 		return (false);
 	table->philos = init_philos(table);
@@ -120,6 +125,5 @@ bool	init_params(t_params *table, int ac, char *av[])
 		return (false);
 	if (!init_forks_and_mutexes(table))
 		return (false);
-	table->sim_stop = false;
 	return (true);
 }

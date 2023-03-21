@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 05:05:47 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/16 13:05:53 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/21 12:48:57 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_putnbr(int n)
 	if (n < 10)
 	{
 		c = n + '0';
-		write (1, &c, 1);
+		write (2, &c, 1);
 	}
 	if (n >= 10)
 	{
@@ -42,29 +42,28 @@ bool	msg(char *str, bool exit_nb)
 	return (exit_nb);
 }
 
-static void	print_status(t_philo *philo, char *str)
+void	print_status(t_philo *philo, char *str)
 {
-	printf("%ld %d %s\n", \
-	(get_time_in_ms() - philo->table->start_time), (philo->id + 1), str);
+	printf("%ld ", (get_time_in_ms() - philo->table->start_time));
+	printf("%d ", (philo->id + 1));
+	printf("%s\n", str);
 }
 
-void	write_status(t_philo *philo, bool report, t_status status)
+void	display_status(t_philo *philo, t_status status)
 {
-	pthread_mutex_lock(&philo->table->write_lock);
-	if (simulation_status(philo->table) == true && report == false)
+	pthread_mutex_lock(&philo->table->print_mutex);
+	if (simulation_status(philo->table) == true)
 	{
-		pthread_mutex_unlock(&philo->table->write_lock);
+		pthread_mutex_unlock(&philo->table->print_mutex);
 		return ;
 	}
-	if (status == DIED)
-		print_status(philo, "died");
-	else if (status == EATING)
+	if (status == EATING)
 		print_status(philo, "is eating");
 	else if (status == SLEEPING)
 		print_status(philo, "is sleeping");
 	else if (status == THINKING)
 		print_status(philo, "is thinking");
-	else if (status == TOOK_FORK_1 || TOOK_FORK_2)
+	else if (status == TOOK_FORK)
 		print_status(philo, "has taken a fork");
-	pthread_mutex_unlock(&philo->table->write_lock);
+	pthread_mutex_unlock(&philo->table->print_mutex);
 }

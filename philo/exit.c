@@ -6,7 +6,7 @@
 /*   By: wcista <wcista@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 03:31:23 by wcista            #+#    #+#             */
-/*   Updated: 2023/03/06 07:43:07 by wcista           ###   ########.fr       */
+/*   Updated: 2023/03/21 13:31:59 by wcista           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@ bool	destroy_mutexes(t_params *table)
 	i = 0;
 	while (i < table->nb_philos)
 	{
-		if (pthread_mutex_destroy(&table->fork_locks[i]))
+		if (pthread_mutex_destroy(&table->fork_mutex[i]))
 			return (error_bool(MUTEX_DEST_ERR, table));
-		if (pthread_mutex_destroy(&table->philos[i]->meal_time_lock))
+		if (pthread_mutex_destroy(&table->philos[i]->meal_mutex))
 			return (error_bool(MUTEX_DEST_ERR, table));
 		i++;
 	}
-	if (pthread_mutex_destroy(&table->write_lock))
+	if (pthread_mutex_destroy(&table->print_mutex))
 		return (error_bool(MUTEX_DEST_ERR, table));
-	if (pthread_mutex_destroy(&table->sim_stop_lock))
+	if (pthread_mutex_destroy(&table->stop_mutex))
 		return (error_bool(MUTEX_DEST_ERR, table));
 	return (true);
 }
@@ -55,10 +55,10 @@ void	*free_prog(t_params *table)
 {
 	if (!table)
 		return (NULL);
-	if (table->fork_locks != NULL)
+	if (table->fork_mutex != NULL)
 	{
-		free(table->fork_locks);
-		table->fork_locks = NULL;
+		free(table->fork_mutex);
+		table->fork_mutex = NULL;
 	}
 	if (table->philos != NULL)
 		free_philos(table);
