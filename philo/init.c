@@ -118,6 +118,8 @@ bool	init_params(t_params *table, int ac, char *av[])
 	((table->time_die - (table->time_eat + table->time_sleep)) / 2);
 	if (table->time_think < 0)
 		table->time_think = 0;
+	if (table->time_think > 600)
+		table->time_think = 200;
 	if (!check_params(ac, av, table))
 		return (false);
 	table->philos = init_philos(table);

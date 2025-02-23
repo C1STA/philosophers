@@ -1,45 +1,35 @@
-NAME = philo
+RED			= \033[0;31m
+CYAN		= \033[0;36m
+GREEN		= \033[0;32m
+YELLOW	= \033[0;33m
+WHITE		= \033[0;37m
 
-CC = gcc
+NAME = philo
+CC = cc
 CFLAGS = -pthread -Wall -Wextra -Werror
 
-SRC = main.c \
-	exit.c \
-	supervisor.c \
-	init.c \
-	lib.c \
-	output.c \
-	philosopher.c \
-	sim.c \
-	time.c
+SRC = main.c exit.c supervisor.c init.c lib.c output.c philosopher.c sim.c time.c
 
 OBJ = $(SRC:.c=.o)
 
-all : $(NAME)
+all: $(NAME)
 
 $(NAME): $(OBJ)
-	echo "\033[36mMaking philo\033[0m"
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -g
-	echo "\033[32mDone\033[0m"
+	@echo "$(CYAN)Linking $(NAME)...$(WHITE)"
+	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	@echo "$(GREEN)Done$(WHITE)"
 
 %.o : %.c
-	$(CC) $(CFLAGS) -c $^ -g
+	@$(CC) $(CFLAGS) -c $^
 
-bonus : all
+clean:
+	@echo "$(RED)Cleaning $(NAME)...$(WHITE)"
+	@rm -f $(OBJ)
+	@echo "$(GREEN)Done$(WHITE)"
 
-clean :
-	echo "\033[35mCleaning philo's objects ...\033[0m"
-	rm -f $(OBJ)
-	echo "\033[32mDone\033[0m"
+fclean: clean
+	@rm -f $(NAME)
 
-fclean :
-	make clean
-	echo "\033[35mCleaning philo ...\033[0m"
-	rm -f $(NAME)
-	echo "\033[32mDone\033[0m"
+re: fclean all
 
-re : fclean
-	make all
-
-.PHONY : all clean fclean re bonus
-.SILENT :
+.PHONY : all clean fclean re
