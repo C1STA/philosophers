@@ -29,8 +29,10 @@ int	ft_atoi(char *str)
 
 	i = 0;
 	res = 0;
-	if (!*str || !str || ft_strlen(str) > 10)
+	if (!*str || !str || ft_strlen(str) > 11)
 		return (-1);
+	if (str[i] == '+')
+		i++;
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')

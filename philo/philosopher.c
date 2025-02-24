@@ -22,16 +22,7 @@ static void	*philo_is_alone(t_philo *philo)
 	return (NULL);
 }
 
-static bool	philo_thinking(t_philo *philo)
-{
-	display_status(philo, THINKING);
-	usleep(philo->table->time_think * 1000);
-	if (philo->times_ate == (unsigned int)philo->table->must_eat_count)
-		return (false);
-	return (true);
-}
-
-static void	eat_and_sleep(t_philo *philo)
+static void	eat_sleep_think(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->table->fork_mutex[philo->fork[0]]);
 	display_status(philo, TOOK_FORK);
@@ -42,16 +33,15 @@ static void	eat_and_sleep(t_philo *philo)
 	philo->last_meal = get_time_in_ms();
 	pthread_mutex_unlock(&philo->meal_mutex);
 	latency(philo->table, philo->table->time_eat);
-	if (!simulation_status(philo->table))
-	{
-		pthread_mutex_lock(&philo->meal_mutex);
-		philo->times_ate++;
-		pthread_mutex_unlock(&philo->meal_mutex);
-	}
+	pthread_mutex_lock(&philo->meal_mutex);
+	philo->times_ate++;
+	pthread_mutex_unlock(&philo->meal_mutex);
 	pthread_mutex_unlock(&philo->table->fork_mutex[philo->fork[1]]);
 	pthread_mutex_unlock(&philo->table->fork_mutex[philo->fork[0]]);
 	display_status(philo, SLEEPING);
 	latency(philo->table, philo->table->time_sleep);
+	display_status(philo, THINKING);
+	usleep(philo->table->time_think * 1000);
 }
 
 void	*philosopher(void *data)
@@ -72,10 +62,6 @@ void	*philosopher(void *data)
 	if (philo->id % 2)
 		usleep(philo->table->time_think * 1000);
 	while (simulation_status(philo->table) == false)
-	{
-		eat_and_sleep(philo);
-		if (!philo_thinking(philo))
-			return (NULL);
-	}
+		eat_sleep_think(philo);
 	return (NULL);
 }
