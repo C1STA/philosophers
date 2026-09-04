@@ -57,10 +57,10 @@ static t_philo	**init_philos(t_params *table)
 	t_philo	**philos;
 	int		i;
 
-	philos = (t_philo **)malloc(sizeof(t_philo) * table->nb_philos);
+	philos = (t_philo **)malloc(sizeof(*philos) * table->nb_philos);
 	if (!philos)
 		return (error_null(MALLOC_ERR, table));
-	memset(philos, 0, sizeof(t_philo));
+	memset(philos, 0, sizeof(*philos) * table->nb_philos);
 	i = 0;
 	while (i < table->nb_philos)
 	{
@@ -88,16 +88,16 @@ static bool	check_params(int ac, char *av[], t_params *table)
 		is_valid = msg(ARG_1_ERR, false);
 	if (table->nb_philos > MAX_PHILOS)
 		is_valid = msg_max_philos(MAX_PHILOS_ERR, MAX_PHILOS, false);
-	if (table->time_die < 0)
+	if (table->time_die <= 0)
 		is_valid = msg(ARG_2_ERR, false);
-	if (table->time_eat < 0)
+	if (table->time_eat <= 0)
 		is_valid = msg(ARG_3_ERR, false);
-	if (table->time_sleep < 0)
+	if (table->time_sleep <= 0)
 		is_valid = msg(ARG_4_ERR, false);
 	if (ac == 6)
 	{
 		table->must_eat_count = ft_atoi(av[5]);
-		if (table->must_eat_count < 0)
+		if (table->must_eat_count <= 0)
 			is_valid = msg(ARG_5_ERR, false);
 	}
 	else

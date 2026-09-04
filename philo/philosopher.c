@@ -28,10 +28,16 @@ static void	eat_sleep_think(t_philo *philo)
 	display_status(philo, TOOK_FORK);
 	pthread_mutex_lock(&philo->table->fork_mutex[philo->fork[1]]);
 	display_status(philo, TOOK_FORK);
-	display_status(philo, EATING);
+	if (simulation_status(philo->table))
+	{
+		pthread_mutex_unlock(&philo->table->fork_mutex[philo->fork[1]]);
+		pthread_mutex_unlock(&philo->table->fork_mutex[philo->fork[0]]);
+		return ;
+	}
 	pthread_mutex_lock(&philo->meal_mutex);
 	philo->last_meal = get_time_in_ms();
 	pthread_mutex_unlock(&philo->meal_mutex);
+	display_status(philo, EATING);
 	latency(philo->table, philo->table->time_eat);
 	pthread_mutex_unlock(&philo->table->fork_mutex[philo->fork[1]]);
 	pthread_mutex_unlock(&philo->table->fork_mutex[philo->fork[0]]);

@@ -1,0 +1,57 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Build
+        run: make -C philo
+
+      - name: Reject invalid arguments
+        run: |
+          if ./philo/philo 5 0 200 200 >/dev/null 2>&1; then
+            exit 1
+          fi
+          if ./philo/philo 5 800 200 200 0 >/dev/null 2>&1; then
+            exit 1
+          fi
+          if ./philo/philo invalid 800 200 200 >/dev/null 2>&1; then
+            exit 1
+          fi
+
+      - name: Test a single philosopher
+        run: |
+          output=$(mktemp)
+          trap 'rm -f "$output"' EXIT
+          timeout 3 ./philo/philo 1 200 100 100 > "$output"
+          test "$(grep -c ' has taken a fork$' "$output")" -eq 1
+          test "$(grep -c ' died$' "$output")" -eq 1
+          tail -n 1 "$output" | grep -q ' died$'
+
+      - name: Test starvation detection
+        run: |
+          output=$(mktemp)
+          trap 'rm -f "$output"' EXIT
+          timeout 5 ./philo/philo 4 310 200 200 > "$output"
+          test "$(grep -c ' died$' "$output")" -eq 1
+          tail -n 1 "$output" | grep -q ' died$'
+
+      - name: Test the meal quota
+        run: |
+          output=$(mktemp)
+          trap 'rm -f "$output"' EXIT
+          timeout 10 ./philo/philo 5 800 200 200 3 > "$output"
+          test "$(grep -c ' died$' "$output")" -eq 0
+          awk '$3 == "is" && $4 == "eating" { meals[$2]++ }
+            END { for (id = 1; id <= 5; id++) if (meals[id] < 3) exit 1 }' "$output"

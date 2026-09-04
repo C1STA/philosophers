@@ -1,2 +1,4 @@
-*.o
-/.vscode
+philo/philo
+philo/*.o
+.vscode/
+.DS_Store

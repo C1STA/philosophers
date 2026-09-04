@@ -23,7 +23,7 @@ time_t	get_time_in_ms(void)
 void	sim_start_delay(time_t start_time)
 {
 	while (get_time_in_ms() < start_time)
-		continue ;
+		usleep(100);
 }
 
 void	latency(t_params *table, time_t sleep_time)

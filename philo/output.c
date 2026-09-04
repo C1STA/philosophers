@@ -44,9 +44,8 @@ bool	msg(char *str, bool exit_nb)
 
 void	print_status(t_philo *philo, char *str)
 {
-	printf("%ld ", (get_time_in_ms() - philo->table->start_time));
-	printf("%d ", (philo->id + 1));
-	printf("%s\n", str);
+	printf("%ld %u %s\n", get_time_in_ms() - philo->table->start_time,
+		philo->id + 1, str);
 }
 
 void	display_status(t_philo *philo, t_status status)

@@ -20,15 +20,15 @@ bool	destroy_mutexes(t_params *table)
 	while (i < table->nb_philos)
 	{
 		if (pthread_mutex_destroy(&table->fork_mutex[i]))
-			return (error_bool(MUTEX_DEST_ERR, table));
+			return (error_bool(MUTEX_DESTROY_ERR, table));
 		if (pthread_mutex_destroy(&table->philos[i]->meal_mutex))
-			return (error_bool(MUTEX_DEST_ERR, table));
+			return (error_bool(MUTEX_DESTROY_ERR, table));
 		i++;
 	}
 	if (pthread_mutex_destroy(&table->print_mutex))
-		return (error_bool(MUTEX_DEST_ERR, table));
+		return (error_bool(MUTEX_DESTROY_ERR, table));
 	if (pthread_mutex_destroy(&table->stop_mutex))
-		return (error_bool(MUTEX_DEST_ERR, table));
+		return (error_bool(MUTEX_DESTROY_ERR, table));
 	return (true);
 }
 

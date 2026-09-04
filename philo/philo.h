@@ -33,7 +33,7 @@
 # define MAX_PHILOS_ERR "philo: <number of philosophers> > "
 # define MALLOC_ERR "philo: malloc failed\n"
 # define MUTEX_INIT_ERR "philo: pthread_mutex_init failed\n"
-# define MUTEX_DEST_ERR "philo: pthread_mutex_destory failed\n"
+# define MUTEX_DESTROY_ERR "philo: pthread_mutex_destroy failed\n"
 # define THREAD_CREAT_ERR "philo: pthread_create failed\n"
 # define THREAD_JOIN_ERR "philo: pthread_join failed\n"
 
@@ -75,37 +75,29 @@ typedef enum e_status
 	TOOK_FORK,
 }	t_status;
 
-//	exit.c
 bool	destroy_mutexes(t_params *table);
 void	*free_prog(t_params *table);
 bool	error_bool(char *str, t_params *table);
 void	*error_null(char *str, t_params *table);
 
-//	supervisor.c
 bool	simulation_status(t_params *table);
 void	*supervisor(void *data);
 
-//	init.c
 bool	init_params(t_params *table, int ac, char *av[]);
 
-//	lib.c
 int		ft_atoi(char *str);
 int		ft_strlen(char *str);
 
-//output.c
 bool	msg(char *str, bool exit_nb);
 bool	msg_max_philos(char *str, int max, bool exit_nb);
 void	print_status(t_philo *philo, char *str);
 void	display_status(t_philo *philo, t_status status);
 
-//philo.c
 void	*philosopher(void *data);
 
-//sim.c
 bool	start_simulation(t_params *table);
 bool	stop_simulation(t_params *table);
 
-//time.c
 time_t	get_time_in_ms(void);
 void	sim_start_delay(time_t start_time);
 void	latency(t_params *table, time_t sleep_time);
